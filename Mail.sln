@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail.WebApi", "Mail.WebApi\Mail.WebApi.csproj", "{409B5650-C71D-495B-BA1A-054E10938732}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail.Domain", "Mail.Domain\Mail.Domain.csproj", "{ADAD9302-514D-4B61-9A2F-2890DBB8AEF0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail.Application", "Mail.Application\Mail.Application.csproj", "{3F715C19-0118-466E-B409-2B0ADFFEBA5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mail.Infrastructure", "Mail.Infrastructure\Mail.Infrastructure.csproj", "{65271880-276A-449B-A690-BEE211AECF85}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{409B5650-C71D-495B-BA1A-054E10938732}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{409B5650-C71D-495B-BA1A-054E10938732}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{409B5650-C71D-495B-BA1A-054E10938732}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{409B5650-C71D-495B-BA1A-054E10938732}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADAD9302-514D-4B61-9A2F-2890DBB8AEF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADAD9302-514D-4B61-9A2F-2890DBB8AEF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADAD9302-514D-4B61-9A2F-2890DBB8AEF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADAD9302-514D-4B61-9A2F-2890DBB8AEF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F715C19-0118-466E-B409-2B0ADFFEBA5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F715C19-0118-466E-B409-2B0ADFFEBA5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F715C19-0118-466E-B409-2B0ADFFEBA5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F715C19-0118-466E-B409-2B0ADFFEBA5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65271880-276A-449B-A690-BEE211AECF85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65271880-276A-449B-A690-BEE211AECF85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65271880-276A-449B-A690-BEE211AECF85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65271880-276A-449B-A690-BEE211AECF85}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
