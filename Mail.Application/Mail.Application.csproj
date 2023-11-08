@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Mail.Infrastructure\Mail.Infrastructure.csproj" />
+    </ItemGroup>
+
 </Project>

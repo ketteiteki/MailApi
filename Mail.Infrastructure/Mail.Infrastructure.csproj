@@ -6,4 +6,12 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Mail.Domain\Mail.Domain.csproj" />
+
+    </ItemGroup>
+
+
+
+
 </Project>
