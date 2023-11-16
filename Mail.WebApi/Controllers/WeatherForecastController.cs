@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mail.WebApi.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("")]
 public class WeatherForecastController : ControllerBase
 {
     private static readonly string[] Summaries = new[]
@@ -18,7 +21,8 @@ public class WeatherForecastController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet(Name = "GetWeatherForecast")]
+    [Authorize]
+    [HttpGet]
     public IEnumerable<WeatherForecast> Get()
     {
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
@@ -28,5 +32,28 @@ public class WeatherForecastController : ControllerBase
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+    }
+    
+    [HttpGet("check")]
+    public async Task<IActionResult> Check()
+    {
+        var r = await HttpContext.AuthenticateAsync();
+        var ticket = r.Ticket;
+        var accessToken = r.Ticket?.Properties.GetTokenValue("access_token");
+        
+        return Ok(1);
+    }
+
+    [HttpGet("login")]
+    public async Task<IActionResult> Login()
+    {
+        var r = await HttpContext.AuthenticateAsync();
+
+        if (r.Succeeded)
+        {
+            return Redirect("/check");
+        }
+        
+        return Challenge();
     }
 }

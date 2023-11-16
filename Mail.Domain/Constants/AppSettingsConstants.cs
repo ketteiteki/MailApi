@@ -2,7 +2,9 @@ namespace Mail.Domain.Constants;
 
 public static class AppSettingsConstants
 {
-    public static string SqlConnection = "SqlConnection";
+    public const string SqlConnection = "SqlConnection";
     
-    public static string SqlDatabaseConnection = "SqlDatabaseConnection";
+    public const string SqlDatabaseConnection = "SqlDatabaseConnection";
+    
+    public const string KeyCloak = "KeyCloak";
 }
