@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,19 +6,12 @@ namespace Mail.WebApi.Controllers;
 
 [ApiController]
 [Route("")]
-public class WeatherForecastController : ControllerBase
+public class AuthorizationController : ControllerBase
 {
     private static readonly string[] Summaries = new[]
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
     };
-
-    private readonly ILogger<WeatherForecastController> _logger;
-
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
-    {
-        _logger = logger;
-    }
 
     [Authorize]
     [HttpGet]
@@ -34,14 +26,12 @@ public class WeatherForecastController : ControllerBase
             .ToArray();
     }
     
-    [HttpGet("check")]
+    [HttpGet("isAuthenticated")]
     public async Task<IActionResult> Check()
     {
-        var r = await HttpContext.AuthenticateAsync();
-        var ticket = r.Ticket;
-        var accessToken = r.Ticket?.Properties.GetTokenValue("access_token");
+        var authenticateResult = await HttpContext.AuthenticateAsync();
         
-        return Ok(1);
+        return Ok(authenticateResult.Succeeded);
     }
 
     [HttpGet("login")]
@@ -51,7 +41,7 @@ public class WeatherForecastController : ControllerBase
 
         if (r.Succeeded)
         {
-            return Redirect("/check");
+            return Redirect("/isAuthenticated");
         }
         
         return Challenge();
