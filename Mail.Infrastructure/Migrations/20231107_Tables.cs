@@ -9,11 +9,11 @@ public class Tables : Migration
     public override void Up()
     {
         Create.Table("UserEntity")
-            .WithColumn("Id").AsGuid().NotNullable().PrimaryKey()
+            .WithColumn("Id").AsGuid().NotNullable().PrimaryKey().WithDefaultValue(SystemMethods.NewGuid)
             .WithColumn("MailAddress").AsString(255).NotNullable();
         
         Create.Table("LetterEntity")
-            .WithColumn("Id").AsGuid().NotNullable().PrimaryKey()
+            .WithColumn("Id").AsGuid().NotNullable().PrimaryKey().WithDefaultValue(SystemMethods.NewGuid)
             .WithColumn("Title").AsString(255).NotNullable()
             .WithColumn("Content").AsString(255).NotNullable()
             .WithColumn("Type").AsInt16().NotNullable()

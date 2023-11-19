@@ -1,6 +1,9 @@
+using System.Security.Claims;
 using IdentityModel.Client;
 using Mail.Domain.Constants;
+using Mail.Domain.Entities;
 using Mail.Domain.Models;
+using Mail.Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -15,7 +18,8 @@ public static class AuthenticationServices
         this IServiceCollection serviceCollection,
         IConfiguration configuration)
     {
-        var keyCloakConfiguration = configuration.GetSection(AppSettingsConstants.KeyCloak).Get<KeyCloakConfiguration>();
+        var keyCloakConfiguration = configuration.GetSection(AppSettingsConstants.KeyCloak).Get<KeyCloakConfiguration>() ??
+                                    throw new Exception("There isn't Keycloak configuration");
         
         serviceCollection
             .AddAuthentication(options =>
@@ -50,6 +54,11 @@ public static class AuthenticationServices
                 options.ResponseType = OpenIdConnectResponseType.Code;
                 options.NonceCookie.SameSite = SameSiteMode.Unspecified;
                 options.CorrelationCookie.SameSite = SameSiteMode.Unspecified;
+
+                options.Events = new OpenIdConnectEvents
+                {
+                    OnTicketReceived = CreateUserAfterReceivingTicket
+                };
             });
 
         return serviceCollection;
@@ -60,14 +69,15 @@ public static class AuthenticationServices
         var configuration = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
         var httpContext = context.HttpContext.RequestServices.GetRequiredService<HttpClient>();
         
-        var keyCloakConfiguration = configuration.GetSection(AppSettingsConstants.KeyCloak).Get<KeyCloakConfiguration>();
         var hasAuthorizeAttribute = context.HttpContext.GetEndpoint()?.Metadata.GetMetadata<AuthorizeAttribute>() != null;
+        var keyCloakConfiguration = configuration.GetSection(AppSettingsConstants.KeyCloak).Get<KeyCloakConfiguration>() ??
+                                    throw new Exception("There isn't keycloak configuration");
         
         if (!hasAuthorizeAttribute)
         {
             return;
         }
-
+        
         var getExpiresAtResult = context.Properties.Items.TryGetValue(KeyCloakClaimConstants.ExpiresAt, out var expireAt);
         
         if (!getExpiresAtResult || expireAt == null)
@@ -114,6 +124,27 @@ public static class AuthenticationServices
             };
 
             return await httpContext.RequestRefreshTokenAsync(refreshTokenRequest);
+        }
+    }
+
+    private static async Task CreateUserAfterReceivingTicket(TicketReceivedContext context)
+    {
+        var userRepository = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+
+        var sub = context.Principal?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        
+        if (sub == null)
+        {
+            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return;
+        }
+
+        var user = await userRepository.GetUserById(new Guid(sub));
+        
+        if (user == null)
+        {
+            var newUser = new UserEntity(new Guid(sub), "test");
+            await userRepository.InsertUser(newUser);
         }
     }
 }

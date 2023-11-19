@@ -1,6 +1,5 @@
 using FluentMigrator.Runner;
 using Mail.Domain.Constants;
-using Mail.Infrastructure;
 using Mail.Infrastructure.Interfaces;
 using Mail.Infrastructure.Migrations;
 using Mail.Infrastructure.Repositories;
@@ -9,14 +8,14 @@ using Mail.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var sqlDatabaseConnectionString = configuration.GetConnectionString(AppSettingsConstants.SqlDatabaseConnection);
-
-//db context
-builder.Services.AddSingleton<DapperContext>();
+var connectionString = configuration.GetConnectionString(AppSettingsConstants.SqlDatabaseConnection) ??
+                       throw new Exception("There isn't connection string");
 
 //repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ILetterRepository, LetterRepository>();
+
+builder.Services.AddSingleton(connectionString);
 
 builder.Services.AddScoped<HttpClient>();
 
@@ -27,7 +26,7 @@ builder.Services
     .ConfigureRunner(rb =>
     {
         rb.AddPostgres();
-        rb.WithGlobalConnectionString(sqlDatabaseConnectionString);
+        rb.WithGlobalConnectionString(connectionString);
         rb.ScanIn(typeof(Tables).Assembly).For.Migrations();
     });
 
