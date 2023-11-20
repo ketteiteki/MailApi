@@ -2,15 +2,15 @@ namespace Mail.Domain.Models;
 
 public class KeyCloakConfiguration
 {
-    public string ServerRealm { get; set; } = null!;
+    public required string ServerRealm { get; set; }
     
-    public string Metadata { get; set; } = null!;
+    public required string Metadata { get; set; }
     
-    public string ClientId { get; set; } = null!;
+    public required string ClientId { get; set; }
     
-    public string ClientSecret { get; set; } = null!;
+    public required string ClientSecret { get; set; }
     
-    public string Audience { get; set; } = null!;
+    public required string Audience { get; set; }
 
-    public string TokenUrl { get; set; } = null!;
+    public required string TokenUrl { get; set; }
 }

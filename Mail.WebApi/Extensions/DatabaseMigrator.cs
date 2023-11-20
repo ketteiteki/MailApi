@@ -5,11 +5,6 @@ using Npgsql;
 
 namespace Mail.WebApi.Extensions;
 
-public class PgDatabaseRecord
-{
-    public string datname { get; set; }
-}
-
 public static class DatabaseInitializer
 {
     public static async Task CreateDatabaseAsync(this IServiceCollection serviceCollection)
