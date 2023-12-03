@@ -1,4 +1,6 @@
 using FluentMigrator.Runner;
+using FluentMigrator.Runner.Conventions;
+using Mail.Application.BusinessLogic;
 using Mail.Domain.Constants;
 using Mail.Infrastructure.Interfaces;
 using Mail.Infrastructure.Migrations;
@@ -8,18 +10,24 @@ using Mail.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
-var connectionString = configuration.GetConnectionString(AppSettingsConstants.SqlDatabaseConnection) ??
-                       throw new Exception("There isn't connection string");
+var connectionString = configuration.GetConnectionString(AppSettingsConstants.SqlDatabaseConnection);
+var dbmsConnectionString = configuration.GetConnectionString(AppSettingsConstants.SqlDbmsConnection);
+
+ArgumentException.ThrowIfNullOrEmpty(connectionString);
+ArgumentException.ThrowIfNullOrEmpty(dbmsConnectionString);
 
 //repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ILetterRepository, LetterRepository>();
 
+//services
+builder.Services.AddScoped<LetterService>();
+
 builder.Services.AddSingleton(connectionString);
 
 builder.Services.AddScoped<HttpClient>();
 
-await builder.Services.CreateDatabaseAsync();
+builder.Services.AddScoped<IConventionSet>(_ => new DefaultConventionSet("public", ""));
 
 builder.Services
     .AddFluentMigratorCore()
@@ -51,6 +59,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Services.MigrateDatabase();
+await app.Services.MigrateDatabase(dbmsConnectionString, connectionString);
 
 app.Run();

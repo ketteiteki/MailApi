@@ -1,10 +1,10 @@
 namespace Mail.Domain.Entities;
 
-public class UserEntity(Guid id, string mailAddress)
+public class UserEntity
 {
-    public Guid Id { get; set; } = id;
+    public Guid Id { get; set; }
 
-    public string MailAddress { get; set; } = mailAddress;
+    public required string MailAddress { get; set; }
 
-    public IEnumerable<LetterEntity> LetterEntities { get; set; } = new List<LetterEntity>();
+    public List<LetterEntity> LetterEntities { get; set; } = new();
 }
