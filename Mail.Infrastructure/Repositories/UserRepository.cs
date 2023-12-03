@@ -7,7 +7,7 @@ namespace Mail.Infrastructure.Repositories;
 
 public class UserRepository(string connectionString) : IUserRepository
 {
-    public async Task<UserEntity?> GetUserById(Guid id)
+    public async Task<UserEntity?> GetUserByIdAsync(Guid id)
     {
         await using var connection = new NpgsqlConnection(connectionString);
         
@@ -16,12 +16,16 @@ public class UserRepository(string connectionString) : IUserRepository
         return await connection.QueryFirstOrDefaultAsync<UserEntity>(query, new {Id = id});
     }
     
-    public async Task InsertUser(UserEntity userEntity)
+    public async Task<UserEntity> InsertUserAsync(UserEntity userEntity)
     {
         await using var connection = new NpgsqlConnection(connectionString);
 
-        var query = """insert into "UserEntity" ("Id",  "MailAddress") values (@Id, @MailAddress)""";
+        var query = """
+                    insert into "UserEntity" ("Id", "MailAddress")
+                    values (@Id, @MailAddress)
+                    returning *
+                    """;
 
-        await connection.ExecuteAsync(query, userEntity);
+        return await connection.QueryFirstAsync<UserEntity>(query, userEntity);
     }
 }

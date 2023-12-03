@@ -4,7 +4,7 @@ namespace Mail.Infrastructure.Interfaces;
 
 public interface IUserRepository
 {
-    Task<UserEntity?> GetUserById(Guid id);
+    Task<UserEntity?> GetUserByIdAsync(Guid id);
     
-    Task InsertUser(UserEntity userEntity);
+    Task<UserEntity> InsertUserAsync(UserEntity userEntity);
 }

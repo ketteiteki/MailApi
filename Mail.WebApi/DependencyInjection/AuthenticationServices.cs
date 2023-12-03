@@ -132,19 +132,20 @@ public static class AuthenticationServices
         var userRepository = context.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
 
         var sub = context.Principal?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        var email =  context.Principal?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
         
-        if (sub == null)
+        if (sub == null || email == null)
         {
             context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
             return;
         }
 
-        var user = await userRepository.GetUserById(new Guid(sub));
+        var user = await userRepository.GetUserByIdAsync(new Guid(sub));
         
         if (user == null)
         {
-            var newUser = new UserEntity(new Guid(sub), "test");
-            await userRepository.InsertUser(newUser);
+            var newUser = new UserEntity { Id = new Guid(sub), MailAddress = email };
+            await userRepository.InsertUserAsync(newUser);
         }
     }
 }

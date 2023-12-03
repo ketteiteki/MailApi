@@ -1,24 +1,16 @@
-using Mail.Domain.Enum;
-
 namespace Mail.Domain.Entities;
 
 public class LetterEntity
 {
     public Guid Id { get; set; }
-    
-    public string Title { get; set; }
-    
-    public string Content { get; set; }
-    
-    public UserEntity Owner { get; set; }
 
-    public LetterType Type { get; set; }
+    public required string Title { get; set; }
 
-    public LetterEntity(string title, string content, UserEntity owner, LetterType type)
-    {
-        Title = title;
-        Content = content;
-        Owner = owner;
-        Type = type;
-    }
+    public required string Content { get; set; }
+
+    public DateTimeOffset CreatedAt { get; set; }
+    
+    public required UserEntity? Receiver { get; set; }
+    
+    public required UserEntity? Owner { get; set; }
 }
