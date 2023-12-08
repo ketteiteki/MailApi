@@ -41,8 +41,15 @@ public class LetterService(IUserRepository userRepository, ILetterRepository let
             Content = content
         };
 
-        var letter = await letterRepository.InsertLetterAsync(newLetter);
+        var createdLetter = await letterRepository.InsertLetterAsync(newLetter);
 
+        var letter = await letterRepository.GetLetterWithOwnerByIdAsync(createdLetter.Id);
+
+        if (letter == null)
+        {
+            return new Result<LetterDto>(new Error(ResponseMessages.CreatingLetterError));
+        }
+        
         var letterDto = LetterDto.Create(letter);
         
         return new Result<LetterDto>(letterDto);
@@ -57,9 +64,9 @@ public class LetterService(IUserRepository userRepository, ILetterRepository let
             return new Result<LetterDto>(new Error(ResponseMessages.LetterNotFound));
         }
 
-        var deletedLetter = await letterRepository.DeleteLetterAsync(letter.Id);
+        await letterRepository.DeleteLetterAsync(letter.Id);
 
-        var letterDto = LetterDto.Create(deletedLetter);
+        var letterDto = LetterDto.Create(letter);
         
         return new Result<LetterDto>(letterDto);
     }
