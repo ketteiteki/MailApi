@@ -14,3 +14,4 @@
 
 ### Docker
 - Run: `docker compose up`
+- Add an entry to hosts file for linux `/etc/hosts` or for windows `C:\Windows\System32\Drivers\etc\hosts`: `127.0.0.1 mykeycloak`
