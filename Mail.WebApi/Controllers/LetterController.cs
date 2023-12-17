@@ -13,7 +13,7 @@ namespace Mail.WebApi.Controllers;
 public class LetterController(LetterService letterService) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetLetters([FromQuery] int offset, [FromQuery] int limit)
+    public async Task<IActionResult> GetLetters([FromQuery] int offset = 0, [FromQuery] int limit = 10)
     {
         var requesterId = new Guid(HttpContext.User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
 
