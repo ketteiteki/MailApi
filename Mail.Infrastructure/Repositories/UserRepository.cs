@@ -15,7 +15,16 @@ public class UserRepository(string connectionString) : IUserRepository
 
         return await connection.QueryFirstOrDefaultAsync<UserEntity>(query, new {Id = id});
     }
-    
+
+    public async Task<IEnumerable<UserEntity>> GetUsersAsync(int offset, int count)
+    {
+        await using var connection = new NpgsqlConnection(connectionString);
+        
+        var query = """select * from "UserEntity" offset @Offset limit @Count""";
+
+        return await connection.QueryAsync<UserEntity>(query, new { Offset = offset, Count = count });
+    }
+
     public async Task<UserEntity> InsertUserAsync(UserEntity userEntity)
     {
         await using var connection = new NpgsqlConnection(connectionString);
